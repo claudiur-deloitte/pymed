@@ -72,8 +72,8 @@ class PubMedArticle(object):
     def _extractDescriptor(self: object, xml_element: TypeVar("Element")) -> str:
         path = ".//DescriptorName"
         return {
-                "descriptorname": [descriptor.text for descriptor in xml_element.findall(path) if keyword is not None],
-                "descriptorcode": [descriptor.attrib["UI"] for descriptor in xml_element.findall(path) if keyword is not None]
+                "descriptorname": [descriptor.text for descriptor in xml_element.findall(path) if descriptor is not None],
+                "descriptorcode": [descriptor.attrib["UI"] for descriptor in xml_element.findall(path) if descriptor is not None]
         }
 
     def _extractConclusions(self: object, xml_element: TypeVar("Element")) -> str:
