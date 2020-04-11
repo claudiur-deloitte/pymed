@@ -16,6 +16,7 @@ class PubMedArticle(object):
         "pubmed_id",
         "title",
         "abstract",
+        "descriptor",
         "keywords",
         "journal",
         "publication_date",
@@ -67,6 +68,13 @@ class PubMedArticle(object):
     def _extractAbstract(self: object, xml_element: TypeVar("Element")) -> str:
         path = ".//AbstractText"
         return getContent(element=xml_element, path=path)
+
+    def _extractDescriptor(self: object, xml_element: TypeVar("Element")) -> str:
+        path = ".//DescriptorName"
+        return {
+                "descriptorname": [descriptor.text for descriptor in xml_element.findall(path) if keyword is not None],
+                "descriptorcode": [descriptor.attrib["UI"] for descriptor in xml_element.findall(path) if keyword is not None]
+        }
 
     def _extractConclusions(self: object, xml_element: TypeVar("Element")) -> str:
         path = ".//AbstractText[@Label='CONCLUSION']"
@@ -131,6 +139,7 @@ class PubMedArticle(object):
         self.keywords = self._extractKeywords(xml_element)
         self.journal = self._extractJournal(xml_element)
         self.abstract = self._extractAbstract(xml_element)
+        self.descriptor = self._extractDescriptor(xml_element)
         self.conclusions = self._extractConclusions(xml_element)
         self.methods = self._extractMethods(xml_element)
         self.results = self._extractResults(xml_element)
